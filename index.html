@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PGPG: Covering the Full Parameter Space of Guitar Playing for Improved Tablature Transcription</title>
+<meta name="description" content="Procedurally generated, tablature-annotated guitar audio and fine-grained metrics for automatic guitar tablature transcription.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f6f2; --surface:#ffffff; --ink:#1b2421; --muted:#55615c; --line:#d6dbd5;
+  --accent:#0f6b5b; --string:#b9791a; --dot:#0f6b5b; --dot-ink:#ffffff; --board:#e9ece5;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111715; --surface:#18201d; --ink:#e8ede9; --muted:#9aa8a1; --line:#2c3833;
+    --accent:#4fc2a8; --string:#d9a24a; --dot:#4fc2a8; --dot-ink:#0e1411; --board:#1c2622;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111715; --surface:#18201d; --ink:#e8ede9; --muted:#9aa8a1; --line:#2c3833;
+  --accent:#4fc2a8; --string:#d9a24a; --dot:#4fc2a8; --dot-ink:#0e1411; --board:#1c2622;
+  color-scheme: dark;
+}
+:root{ box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); }
+html{ scroll-padding-top:env(safe-area-inset-top,0px); }
+*,*::before,*::after{ box-sizing:inherit; }
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:1.0625rem/1.65 "Literata", Georgia, "Times New Roman", serif;
+}
+h1,h2,h3,.sans{ font-family:"Archivo", "Helvetica Neue", Arial, sans-serif; }
+a{ color:var(--accent); text-underline-offset:3px; }
+a:focus-visible,button:focus-visible,summary:focus-visible{ outline:3px solid var(--accent); outline-offset:3px; border-radius:4px; }
+.wrap{ max-width:46rem; margin:0 auto; padding:0 1.25rem; }
+header{ padding:3.5rem 0 1.5rem; }
+h1{ font-size:clamp(1.9rem,5vw,2.9rem); line-height:1.12; font-weight:800; letter-spacing:-0.02em; margin:0 0 1.25rem; }
+.authors{ display:flex; flex-wrap:wrap; gap:.5rem 2rem; margin:0 0 1.5rem; padding:0; list-style:none; }
+.authors li{ font-size:1rem; line-height:1.35; }
+.authors small{ display:block; color:var(--muted); font-size:.875rem; }
+.links{ display:flex; flex-wrap:wrap; gap:.6rem; margin:0; padding:0; list-style:none; }
+.links a{
+  display:inline-block; padding:.55rem 1rem; border:1.5px solid var(--ink); border-radius:999px;
+  color:var(--ink); text-decoration:none; font:700 .9rem "Archivo", Arial, sans-serif;
+}
+.links a.primary{ background:var(--ink); color:var(--bg); }
+.links a:hover{ border-color:var(--accent); }
+.links a.primary:hover{ background:var(--accent); color:var(--bg); }
+
+/* Fretboard hero */
+.board-wrap{ margin:1.75rem 0 0; }
+.board{ width:100%; height:auto; display:block; background:var(--board); border:1px solid var(--line); border-radius:6px; }
+.board .fret{ stroke:var(--line); stroke-width:2; }
+.board .nut{ stroke:var(--ink); stroke-width:5; }
+.board .str{ stroke:var(--string); }
+.board .inlay{ fill:var(--line); }
+.board .dot{ fill:var(--dot); }
+.board text{ font:700 13px "Archivo", Arial, sans-serif; }
+.board .dot-t{ fill:var(--dot-ink); text-anchor:middle; dominant-baseline:central; }
+.board .lab{ fill:var(--muted); text-anchor:middle; }
+.board .mark{ fill:var(--muted); text-anchor:middle; dominant-baseline:central; font-size:15px; }
+.board-bar{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.6rem 1rem; margin-top:.7rem; }
+.board-bar p{ margin:0; color:var(--muted); font-size:.9rem; }
+button.act{
+  font:700 .9rem "Archivo", Arial, sans-serif; padding:.5rem 1rem; border-radius:6px;
+  border:1.5px solid var(--accent); background:transparent; color:var(--accent); cursor:pointer;
+}
+button.act:hover{ background:var(--accent); color:var(--bg); }
+
+section{ padding:2.25rem 0 0; }
+h2{ font-size:1.5rem; line-height:1.2; font-weight:800; letter-spacing:-0.01em; margin:0 0 .8rem; }
+h3{ font-size:1.05rem; margin:1.4rem 0 .3rem; }
+p{ margin:0 0 1rem; }
+dl.fam{ margin:0; }
+dl.fam dt{ font:700 1rem "Archivo", Arial, sans-serif; margin-top:.9rem; }
+dl.fam dd{ margin:.1rem 0 0; color:var(--muted); }
+figure{ margin:1.5rem 0; }
+figure img{ max-width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:6px; background:#fff; }
+figcaption{ color:var(--muted); font-size:.9rem; margin-top:.5rem; }
+.scroll{ overflow-x:auto; margin:0 0 .5rem; }
+table{ border-collapse:collapse; width:100%; min-width:34rem; font:500 .92rem "Archivo", Arial, sans-serif; font-variant-numeric:tabular-nums; }
+caption{ text-align:left; color:var(--muted); font:400 .875rem "Literata", Georgia, serif; padding-bottom:.5rem; }
+th,td{ padding:.5rem .6rem; border-bottom:1px solid var(--line); text-align:right; }
+th:first-child,td:first-child{ text-align:left; }
+thead th{ border-bottom:2px solid var(--ink); font-weight:700; }
+tr.ours td{ background:color-mix(in srgb, var(--accent) 10%, transparent); }
+td b{ color:var(--accent); }
+.audio-row{ display:grid; grid-template-columns:1fr; gap:.2rem; margin:0 0 1rem; }
+.audio-row span{ font:700 .95rem "Archivo", Arial, sans-serif; }
+audio{ width:100%; }
+.bib{ position:relative; }
+pre{
+  margin:0; padding:1rem; overflow-x:auto; background:var(--surface); border:1px solid var(--line);
+  border-radius:6px; font:.82rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.bib button{ position:absolute; top:.5rem; right:.5rem; padding:.3rem .7rem; font-size:.8rem; background:var(--surface); }
+footer{ margin:3rem 0 0; padding:1.5rem 0 3rem; border-top:1px solid var(--line); color:var(--muted); font-size:.9rem; }
+@media (prefers-reduced-motion: no-preference){
+  .dot{ transition:opacity .25s; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>PGPG: Covering the Full Parameter Space of Guitar Playing for Improved Tablature Transcription</h1>
+  <ul class="authors">
+    <li>Hegel Pedroza<small>Universidad Autónoma Metropolitana, Lerma</small></li>
+    <li>Jesús H. González<small>Universitat Pompeu Fabra</small></li>
+    <li>Iran R. Román<small>Queen Mary University of London</small></li>
+  </ul>
+  <ul class="links">
+    <li><a class="primary" href="#" id="paper-link">Paper (PDF)</a></li>
+    <li><a href="https://github.com/hegelespaul/PGPG/">Code</a></li>
+    <li><a href="#audio">Audio examples</a></li>
+    <li><a href="#cite">BibTeX</a></li>
+  </ul>
+
+  <div class="board-wrap">
+    <svg class="board" id="board" viewBox="0 0 720 230" role="img" aria-labelledby="board-title"></svg>
+    <div class="board-bar">
+      <p id="board-title">A randomly sampled non-barre chord on the fretboard. PGPG draws string-fret configurations like this from distributions, not from songs.</p>
+      <button class="act" id="resample" type="button">Sample another chord</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section id="abstract">
+  <h2>Abstract</h2>
+  <p>Automatic guitar tablature transcription suffers from limited data. We propose a method that generates synthetic training data by randomly sampling guitar playing parameters from distributions, covering the full space of possible guitar configurations rather than rendering musical patterns found in guitar tablatures of real music. Using banks of pre-recorded real guitar tones, we create diverse polyphonic data. Models trained with our data method achieve competitive or state-of-the-art performance on real-world evaluation.</p>
+  <p>We also introduce novel fine-grained metrics that capture string-level and chord-level behavior, providing deeper insights into fret localization accuracy and chord structure consistency that standard classification metrics cannot reveal.</p>
+</section>
+
+<section id="method">
+  <h2>Data generation</h2>
+  <p>Labels are correct by construction, and volume is not limited by annotated music. Acoustic diversity is bounded by the variability of the single-note recordings (IDMT-SMT, EGFXSet, Guitar-TECHs). The final training set is about 84&nbsp;h of audio. We release the framework, not the generated data.</p>
+  <dl class="fam">
+    <dt>Monophonic sequences</dt>
+    <dd>Random (string, fret) notes with random durations, separated by silences.</dd>
+    <dt>Block polyphony</dt>
+    <dd>Chords of 2 to 6 notes on distinct strings, played at once. Chord types range from position-feasible and non-barre to unconstrained.</dd>
+    <dt>Temporalized polyphony</dt>
+    <dd>Each chord is played as a block or as an overlapping arpeggio with random order and gaps.</dd>
+  </dl>
+  <figure>
+    <!-- Export data_overview_row.pdf from the paper as PNG into img/ -->
+    <img src="img/data_overview_row.png" alt="Generation logic and example tablature for the three data families" loading="lazy">
+    <figcaption>Generation logic and example tablature of the three data families.</figcaption>
+  </figure>
+</section>
+
+<section id="metrics">
+  <h2>Fine-grained metrics</h2>
+  <p>Precision, recall and F<sub>1</sub> treat every wrong label as equally bad. Four complementary metrics add detail:</p>
+  <dl class="fam">
+    <dt>Fretboard Hamming Distance (FHD)</dt>
+    <dd>How much of the fretboard is wrong.</dd>
+    <dt>Fret Error Distance (FED)</dt>
+    <dd>How far, in frets, a wrong prediction is from the truth.</dd>
+    <dt>Chord Cardinality Accuracy (CCA)</dt>
+    <dd>Whether the number of sounding strings is right.</dd>
+    <dt>Chord Spacing Consistency (CSC)</dt>
+    <dd>Whether the fret and string spans of the chord are preserved.</dd>
+  </dl>
+  <figure>
+    <!-- Export the single-frame figure (frame_metrics.pdf) as PNG into img/ -->
+    <img src="img/frame_metrics.png" alt="Worked example of the four metrics on a single chord frame" loading="lazy">
+    <figcaption>Worked example of the four metrics on a single frame.</figcaption>
+  </figure>
+</section>
+
+<section id="results">
+  <h2>Results</h2>
+  <p>All models are evaluated out of domain on EGSet12. PGPG is trained only on procedurally generated data.</p>
+
+  <h3>Standard metrics</h3>
+  <div class="scroll">
+  <table>
+    <caption>Multi-pitch and tablature metrics, and Tablature Disambiguation Rate (TDR).</caption>
+    <thead>
+      <tr><th rowspan="2">Model</th><th colspan="3" style="text-align:center">Multi-pitch</th><th colspan="3" style="text-align:center">Tablature</th><th rowspan="2">TDR</th></tr>
+      <tr><th>P</th><th>R</th><th>F<sub>1</sub></th><th>P</th><th>R</th><th>F<sub>1</sub></th></tr>
+    </thead>
+    <tbody>
+      <tr class="ours"><td>PGPG (ours)</td><td>0.906</td><td><b>0.750</b></td><td><b>0.821</b></td><td>0.645</td><td><b>0.562</b></td><td><b>0.601</b></td><td>0.712</td></tr>
+      <tr><td>Pedroza 2024</td><td>0.904</td><td>0.711</td><td>0.788</td><td>0.644</td><td>0.528</td><td>0.576</td><td>0.732</td></tr>
+      <tr><td>TabCNN</td><td>0.883</td><td>0.496</td><td>0.635</td><td><b>0.655</b></td><td>0.369</td><td>0.472</td><td><b>0.741</b></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Fine-grained metrics</h3>
+  <div class="scroll">
+  <table>
+    <caption>Overall means. FED is in frets. CSC is reported for the fret (X) and string (Y) axes.</caption>
+    <thead><tr><th>Model</th><th>FED ↓</th><th>FHD ↓</th><th>CCA ↑</th><th>CSC (X, Y) ↑</th></tr></thead>
+    <tbody>
+      <tr class="ours"><td>PGPG (ours)</td><td><b>2.469</b></td><td>0.343</td><td>0.596</td><td>0.899, <b>0.868</b></td></tr>
+      <tr><td>Pedroza 2024</td><td>2.680</td><td><b>0.326</b></td><td><b>0.602</b></td><td><b>0.930</b>, 0.865</td></tr>
+      <tr><td>TabCNN</td><td>3.374</td><td>0.426</td><td>0.442</td><td>0.910, 0.802</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>PGPG has the lowest fret error and a more stable spacing consistency across chord sizes (2 to 6 notes). Pedroza 2024 is slightly better on FHD, CCA and fret-axis CSC.</p>
+
+  <figure>
+    <!-- Export MetricPlots.png into img/ -->
+    <img src="img/MetricPlots.png" alt="Per-string and per-chord-size breakdown of FED, FHD, CCA and CSC for the three models" loading="lazy">
+    <figcaption>Breakdown of the fine-grained metrics by string and by chord size. Dash-dotted lines and outlined markers show global means.</figcaption>
+  </figure>
+</section>
+
+<section id="audio">
+  <h2>Audio examples</h2>
+  <!-- Put short MP3 clips in audio/ and keep the file names below, or edit them. -->
+  <div class="audio-row"><span>Monophonic sequence</span><audio controls preload="none" src="audio/monophonic.mp3"></audio></div>
+  <div class="audio-row"><span>Non-barre chords</span><audio controls preload="none" src="audio/non_barre.mp3"></audio></div>
+  <div class="audio-row"><span>Temporalized polyphony (arpeggios)</span><audio controls preload="none" src="audio/temporalized.mp3"></audio></div>
+</section>
+
+<section id="cite">
+  <h2>Citation</h2>
+  <div class="bib">
+    <button class="act" id="copy" type="button">Copy</button>
+<pre id="bibtex">@inproceedings{pedroza2026pgpg,
+  title     = {{PGPG}: Covering the Full Parameter Space of Guitar Playing for Improved Tablature Transcription},
+  author    = {Pedroza, Hegel and Gonz{\'a}lez, Jes{\'u}s H. and Rom{\'a}n, Iran R.},
+  booktitle = {TODO: venue},
+  year      = {2026}
+}</pre>
+  </div>
+</section>
+</main>
+
+<footer>
+  <p>Supported by Mexico’s SECIHTI Graduate Scholarship, with computing power via SECIHTI’s “Ciencia de Frontera, Paradigmas y Controversias de la Ciencia” (320551) program, courtesy of Dr. Hugo Solís García.</p>
+</footer>
+</div>
+
+<script>
+(function(){
+  var NS = "http://www.w3.org/2000/svg";
+  var svg = document.getElementById("board");
+  var FRETS = 12, STRINGS = 6;
+  var X0 = 60, X1 = 700, Y0 = 30, Y1 = 190;
+  var fw = (X1 - X0) / FRETS, sh = (Y1 - Y0) / (STRINGS - 1);
+  var names = ["e","B","G","D","A","E"]; // top to bottom
+
+  function el(tag, attrs, text){
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text !== undefined) e.textContent = text;
+    svg.appendChild(e);
+    return e;
+  }
+
+  // inlays
+  [3,5,7,9].forEach(function(f){ el("circle",{class:"inlay",cx:X0+(f-.5)*fw,cy:(Y0+Y1)/2,r:6}); });
+  el("circle",{class:"inlay",cx:X0+11.5*fw,cy:Y0+sh*1.5,r:6});
+  el("circle",{class:"inlay",cx:X0+11.5*fw,cy:Y0+sh*3.5,r:6});
+  // frets
+  for (var f = 0; f <= FRETS; f++){
+    el("line",{class: f===0 ? "nut" : "fret", x1:X0+f*fw, x2:X0+f*fw, y1:Y0-6, y2:Y1+6});
+    if (f>0) el("text",{class:"lab",x:X0+(f-.5)*fw,y:Y1+30},String(f));
+  }
+  // strings
+  for (var s = 0; s < STRINGS; s++){
+    el("line",{class:"str",x1:X0,x2:X1,y1:Y0+s*sh,y2:Y0+s*sh,"stroke-width":1+s*0.5});
+    el("text",{class:"lab",x:20,y:Y0+s*sh+4},names[s]);
+  }
+  var layer = document.createElementNS(NS,"g");
+  svg.appendChild(layer);
+
+  function rnd(n){ return Math.floor(Math.random()*n); }
+
+  // Non-barre style sample: 2-4 distinct strings, fret span <= 5, no unisons needed for display
+  function sample(){
+    var n = 2 + rnd(3);
+    var strs = [0,1,2,3,4,5].sort(function(){return Math.random()-.5;}).slice(0,n);
+    var base = rnd(8); // lowest fret of the window 0..7
+    var out = {};
+    strs.forEach(function(s){ out[s] = base + rnd(6); }); // base..base+5, span <= 5
+    // keep frets within 0..12
+    Object.keys(out).forEach(function(k){ out[k] = Math.min(out[k], FRETS); });
+    return out;
+  }
+
+  function draw(){
+    while (layer.firstChild) layer.removeChild(layer.firstChild);
+    var chord = sample();
+    for (var s = 0; s < STRINGS; s++){
+      var y = Y0 + s*sh;
+      if (!(s in chord)){
+        var t = document.createElementNS(NS,"text");
+        t.setAttribute("class","mark"); t.setAttribute("x",38); t.setAttribute("y",y);
+        t.textContent = "×"; layer.appendChild(t);
+      } else if (chord[s] === 0){
+        var o = document.createElementNS(NS,"circle");
+        o.setAttribute("cx",38); o.setAttribute("cy",y); o.setAttribute("r",7);
+        o.setAttribute("fill","none"); o.setAttribute("stroke","currentColor");
+        o.setAttribute("style","stroke:var(--dot);stroke-width:2.5"); layer.appendChild(o);
+      } else {
+        var cx = X0 + (chord[s]-.5)*fw;
+        var c = document.createElementNS(NS,"circle");
+        c.setAttribute("class","dot"); c.setAttribute("cx",cx); c.setAttribute("cy",y); c.setAttribute("r",13);
+        layer.appendChild(c);
+        var tx = document.createElementNS(NS,"text");
+        tx.setAttribute("class","dot-t"); tx.setAttribute("x",cx); tx.setAttribute("y",y);
+        tx.textContent = chord[s]; layer.appendChild(tx);
+      }
+    }
+  }
+  draw();
+  document.getElementById("resample").addEventListener("click", draw);
+
+  // BibTeX copy
+  var btn = document.getElementById("copy");
+  btn.addEventListener("click", function(){
+    var txt = document.getElementById("bibtex").textContent;
+    function done(){ btn.textContent = "Copied"; setTimeout(function(){ btn.textContent = "Copy"; }, 1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(done, function(){});
+    } else {
+      var r = document.createRange(); r.selectNodeContents(document.getElementById("bibtex"));
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      try { document.execCommand("copy"); done(); } catch(e){}
+    }
+  });
+})();
+</script>
+</body>
+</html>
