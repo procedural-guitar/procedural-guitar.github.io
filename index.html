@@ -10,81 +10,72 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            --bg: #f5f6f2;
+            --bg: #f7f8f9;
             --surface: #ffffff;
-            --ink: #1b2421;
-            --muted: #55615c;
-            --line: #d6dbd5;
-            --accent: #0f6b5b;
-            --string: #b9791a;
-            --dot: #0f6b5b;
-            --dot-ink: #ffffff;
-            --board: #e9ece5;
+            --ink: #14202b;
+            --muted: #53606c;
+            --line: #dde2e7;
+            --accent: #0b6b63;
+            --hero: #0d2b31;
+            --hero-ink: #f1f5f4;
+            --hero-muted: #a9bfc0;
+            --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+            --sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
             color-scheme: light;
         }
 
         @media (prefers-color-scheme: dark) {
             :root:not([data-theme="light"]) {
-                --bg: #111715;
-                --surface: #18201d;
-                --ink: #e8ede9;
-                --muted: #9aa8a1;
-                --line: #2c3833;
-                --accent: #4fc2a8;
-                --string: #d9a24a;
-                --dot: #4fc2a8;
-                --dot-ink: #0e1411;
-                --board: #1c2622;
+                --bg: #0c1316;
+                --surface: #121b1f;
+                --ink: #e7eeee;
+                --muted: #96a7aa;
+                --line: #223037;
+                --accent: #4cc3b0;
+                --hero: #081a1e;
                 color-scheme: dark;
             }
         }
 
         :root[data-theme="dark"] {
-            --bg: #111715;
-            --surface: #18201d;
-            --ink: #e8ede9;
-            --muted: #9aa8a1;
-            --line: #2c3833;
-            --accent: #4fc2a8;
-            --string: #d9a24a;
-            --dot: #4fc2a8;
-            --dot-ink: #0e1411;
-            --board: #1c2622;
+            --bg: #0c1316;
+            --surface: #121b1f;
+            --ink: #e7eeee;
+            --muted: #96a7aa;
+            --line: #223037;
+            --accent: #4cc3b0;
+            --hero: #081a1e;
             color-scheme: dark;
-        }
-
-        :root {
-            box-sizing: border-box;
-            padding-top: env(safe-area-inset-top, 0px);
-            padding-bottom: env(safe-area-inset-bottom, 0px);
-        }
-
-        html {
-            scroll-padding-top: env(safe-area-inset-top, 0px);
         }
 
         *,
         *::before,
         *::after {
-            box-sizing: inherit;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 4rem;
         }
 
         body {
             margin: 0;
             background: var(--bg);
             color: var(--ink);
-            font: 1.0625rem/1.65 "Literata", Georgia, "Times New Roman", serif;
+            font: 1.0625rem/1.7 var(--serif);
+            -webkit-font-smoothing: antialiased;
         }
 
         h1,
         h2,
-        h3,
-        .sans {
-            font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+        h3 {
+            font-family: var(--sans);
+            color: var(--ink);
         }
 
         a {
@@ -93,49 +84,62 @@
         }
 
         a:focus-visible,
-        button:focus-visible,
-        summary:focus-visible {
+        button:focus-visible {
             outline: 3px solid var(--accent);
             outline-offset: 3px;
             border-radius: 4px;
         }
 
         .wrap {
-            max-width: 46rem;
+            max-width: 62rem;
             margin: 0 auto;
-            padding: 0 1.25rem;
+            padding: 0 1.5rem;
         }
 
-        header {
-            padding: 3.5rem 0 1.5rem;
+        /* ---------- Hero ---------- */
+        .hero {
+            background: var(--hero);
+            color: var(--hero-ink);
+            padding: 4rem 0 3rem;
+            padding-top: calc(4rem + env(safe-area-inset-top, 0px));
         }
 
-        h1 {
-            font-size: clamp(1.9rem, 5vw, 2.9rem);
-            line-height: 1.12;
-            font-weight: 800;
+        .venue {
+            font: 600 .95rem var(--sans);
+            color: var(--hero-muted);
+            margin: 0 0 1rem;
+            letter-spacing: .01em;
+        }
+
+        .hero h1 {
+            font-size: clamp(1.9rem, 4.6vw, 3rem);
+            line-height: 1.14;
+            font-weight: 700;
             letter-spacing: -0.02em;
-            margin: 0 0 1.25rem;
+            margin: 0 0 1.75rem;
+            max-width: 50rem;
+            color: var(--hero-ink);
         }
 
         .authors {
             display: flex;
             flex-wrap: wrap;
-            gap: .5rem 2rem;
-            margin: 0 0 1.5rem;
+            gap: .75rem 2.5rem;
+            margin: 0 0 2rem;
             padding: 0;
             list-style: none;
         }
 
         .authors li {
-            font-size: 1rem;
-            line-height: 1.35;
+            font: 600 1.05rem/1.3 var(--sans);
         }
 
         .authors small {
             display: block;
-            color: var(--muted);
+            margin-top: .15rem;
+            font-weight: 500;
             font-size: .875rem;
+            color: var(--hero-muted);
         }
 
         .links {
@@ -149,81 +153,90 @@
 
         .links a {
             display: inline-block;
-            padding: .55rem 1rem;
-            border: 1.5px solid var(--ink);
-            border-radius: 999px;
-            color: var(--ink);
+            padding: .6rem 1.15rem;
+            border: 1.5px solid rgba(241, 245, 244, .45);
+            border-radius: 6px;
+            color: var(--hero-ink);
             text-decoration: none;
-            font: 700 .9rem "Archivo", Arial, sans-serif;
-        }
-
-        .links a.primary {
-            background: var(--ink);
-            color: var(--bg);
+            font: 600 .92rem var(--sans);
+            transition: background .15s, border-color .15s;
         }
 
         .links a:hover {
-            border-color: var(--accent);
+            border-color: var(--hero-ink);
+            background: rgba(241, 245, 244, .08);
+        }
+
+        .links a.primary {
+            background: var(--hero-ink);
+            border-color: var(--hero-ink);
+            color: var(--hero);
         }
 
         .links a.primary:hover {
-            background: var(--accent);
-            color: var(--bg);
+            background: #fff;
         }
 
-        /* Fretboard hero */
+        .links a:focus-visible {
+            outline-color: var(--hero-ink);
+        }
+
+        /* ---------- Fretboard (the one showpiece) ---------- */
         .board-wrap {
-            margin: 1.75rem 0 0;
+            margin: 3rem 0 0;
         }
 
         .board {
+            --dot: #4cc3b0;
             width: 100%;
             height: auto;
             display: block;
-            background: var(--board);
-            border: 1px solid var(--line);
-            border-radius: 6px;
+            background: linear-gradient(#2d1f18, #231712);
+            border-radius: 8px;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), 0 18px 40px -18px rgba(0, 0, 0, .7);
         }
 
         .board .fret {
-            stroke: var(--line);
+            stroke: #aeb4b8;
             stroke-width: 2;
         }
 
         .board .nut {
-            stroke: var(--ink);
-            stroke-width: 5;
+            stroke: #efe8d8;
+            stroke-width: 6;
         }
 
         .board .str {
-            stroke: var(--string);
+            stroke: #dcb872;
         }
 
         .board .inlay {
-            fill: var(--line);
+            fill: rgba(255, 255, 255, .13);
         }
 
         .board .dot {
             fill: var(--dot);
+            stroke: #0d2b31;
+            stroke-width: 1.5;
         }
 
         .board text {
-            font: 700 13px "Archivo", Arial, sans-serif;
+            font: 700 13px var(--sans);
         }
 
         .board .dot-t {
-            fill: var(--dot-ink);
+            fill: #08201c;
             text-anchor: middle;
             dominant-baseline: central;
         }
 
         .board .lab {
-            fill: var(--muted);
+            fill: #c9b9a8;
             text-anchor: middle;
         }
 
         .board .mark {
-            fill: var(--muted);
+            fill: #c9b9a8;
             text-anchor: middle;
             dominant-baseline: central;
             font-size: 15px;
@@ -234,108 +247,177 @@
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            gap: .6rem 1rem;
-            margin-top: .7rem;
+            gap: .75rem 1.5rem;
+            margin-top: 1rem;
         }
 
         .board-bar p {
             margin: 0;
-            color: var(--muted);
-            font-size: .9rem;
+            max-width: 42rem;
+            color: var(--hero-muted);
+            font-size: .92rem;
+            line-height: 1.55;
         }
 
         button.act {
-            font: 700 .9rem "Archivo", Arial, sans-serif;
-            padding: .5rem 1rem;
+            font: 600 .9rem var(--sans);
+            padding: .55rem 1.1rem;
             border-radius: 6px;
-            border: 1.5px solid var(--accent);
+            border: 1.5px solid var(--hero-ink);
             background: transparent;
-            color: var(--accent);
+            color: var(--hero-ink);
             cursor: pointer;
+            transition: background .15s, color .15s;
         }
 
         button.act:hover {
-            background: var(--accent);
-            color: var(--bg);
+            background: var(--hero-ink);
+            color: var(--hero);
         }
 
+        button.act:focus-visible {
+            outline-color: var(--hero-ink);
+        }
+
+        /* ---------- Section nav ---------- */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: var(--surface);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .nav ul {
+            display: flex;
+            gap: 1.75rem;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            max-width: 62rem;
+            list-style: none;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .nav a {
+            display: block;
+            padding: .95rem 0;
+            font: 600 .9rem var(--sans);
+            color: var(--muted);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav a:hover {
+            color: var(--ink);
+            border-bottom-color: var(--accent);
+        }
+
+        /* ---------- Content ---------- */
         section {
-            padding: 2.25rem 0 0;
+            padding: 3.5rem 0 0;
         }
 
         h2 {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             line-height: 1.2;
-            font-weight: 800;
-            letter-spacing: -0.01em;
-            margin: 0 0 .8rem;
+            font-weight: 700;
+            letter-spacing: -0.015em;
+            margin: 0 0 1.1rem;
+            padding-bottom: .7rem;
+            border-bottom: 1px solid var(--line);
         }
 
         h3 {
-            font-size: 1.05rem;
-            margin: 1.4rem 0 .3rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 2.25rem 0 .7rem;
         }
 
         p {
-            margin: 0 0 1rem;
+            margin: 0 0 1.1rem;
+        }
+
+        section>p,
+        section>dl {
+            max-width: 44rem;
         }
 
         dl.fam {
-            margin: 0;
+            margin: 1.25rem 0 0;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: .9rem;
+        }
+
+        dl.fam>div {
+            padding-left: 1rem;
+            border-left: 3px solid var(--accent);
         }
 
         dl.fam dt {
-            font: 700 1rem "Archivo", Arial, sans-serif;
-            margin-top: .9rem;
+            font: 700 1rem var(--sans);
         }
 
         dl.fam dd {
-            margin: .1rem 0 0;
+            margin: .15rem 0 0;
             color: var(--muted);
         }
 
         figure {
-            margin: 1.5rem 0;
+            margin: 2rem 0;
         }
 
         figure img {
             max-width: 100%;
             height: auto;
             display: block;
+            margin: 0 auto;
             border: 1px solid var(--line);
             border-radius: 6px;
             background: #fff;
+            padding: .5rem;
         }
 
         figcaption {
             color: var(--muted);
-            font-size: .9rem;
-            margin-top: .5rem;
+            font-size: .92rem;
+            margin-top: .65rem;
+            max-width: 44rem;
+        }
+
+        figcaption b {
+            font-family: var(--sans);
+            color: var(--ink);
         }
 
         .scroll {
             overflow-x: auto;
             margin: 0 0 .5rem;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 8px;
         }
 
         table {
             border-collapse: collapse;
             width: 100%;
             min-width: 34rem;
-            font: 500 .92rem "Archivo", Arial, sans-serif;
+            font: 500 .93rem var(--sans);
             font-variant-numeric: tabular-nums;
         }
 
         caption {
             text-align: left;
             color: var(--muted);
-            font: 400 .875rem "Literata", Georgia, serif;
-            padding-bottom: .5rem;
+            font: 400 .9rem var(--serif);
+            padding: .9rem 1rem .6rem;
+            caption-side: top;
         }
 
         th,
         td {
-            padding: .5rem .6rem;
+            padding: .65rem 1rem;
             border-bottom: 1px solid var(--line);
             text-align: right;
         }
@@ -345,67 +427,32 @@
             text-align: left;
         }
 
+        tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
         thead th {
             border-bottom: 2px solid var(--ink);
             font-weight: 700;
+            background: color-mix(in srgb, var(--ink) 3%, transparent);
+        }
+
+        th.grp {
+            text-align: center;
+            border-bottom: 1px solid var(--line);
         }
 
         tr.ours td {
-            background: color-mix(in srgb, var(--accent) 10%, transparent);
+            background: color-mix(in srgb, var(--accent) 9%, transparent);
+            font-weight: 600;
         }
 
         td b {
             color: var(--accent);
         }
 
-        .audio-row {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: .2rem;
-            margin: 0 0 1rem;
-        }
-
-        .audio-row span {
-            font: 700 .95rem "Archivo", Arial, sans-serif;
-        }
-
-        audio {
-            width: 100%;
-        }
-
-        .bib {
-            position: relative;
-        }
-
-        pre {
-            margin: 0;
-            padding: 1rem;
-            overflow-x: auto;
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: 6px;
-            font: .82rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        }
-
-        .bib button {
-            position: absolute;
-            top: .5rem;
-            right: .5rem;
-            padding: .3rem .7rem;
-            font-size: .8rem;
-            background: var(--surface);
-        }
-
-        footer {
-            margin: 3rem 0 0;
-            padding: 1.5rem 0 3rem;
-            border-top: 1px solid var(--line);
-            color: var(--muted);
-            font-size: .9rem;
-        }
-
         table.calc {
-            min-width: 30rem;
+            min-width: 40rem;
         }
 
         table.calc th,
@@ -422,7 +469,87 @@
 
         .sample {
             max-width: 500px;
-            margin: auto;
+        }
+
+        .audio-list {
+            display: grid;
+            gap: .75rem;
+            max-width: 44rem;
+            margin: 0 auto;
+        }
+
+        .audio-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: .4rem;
+            padding: .9rem 1rem;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+        }
+
+        .audio-row span {
+            font: 700 .95rem var(--sans);
+        }
+
+        audio {
+            width: 100%;
+        }
+
+        .bib {
+            position: relative;
+            max-width: 52rem;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.25rem;
+            overflow-x: auto;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            font: .83rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        }
+
+        .bib button.act {
+            position: absolute;
+            top: .6rem;
+            right: .6rem;
+            padding: .3rem .75rem;
+            font-size: .8rem;
+            background: var(--surface);
+            border-color: var(--line);
+            color: var(--ink);
+        }
+
+        .bib button.act:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--surface);
+        }
+
+        .bib button.act:focus-visible {
+            outline-color: var(--accent);
+        }
+
+        footer {
+            margin: 4rem 0 0;
+            padding: 1.75rem 0 calc(3rem + env(safe-area-inset-bottom, 0px));
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-size: .9rem;
+        }
+
+        footer p {
+            max-width: 46rem;
+            margin: 0;
+        }
+
+        @media (min-width: 48rem) {
+            .audio-row {
+                grid-template-columns: 14rem 1fr;
+                align-items: center;
+            }
         }
 
         @media (prefers-reduced-motion: no-preference) {
@@ -430,12 +557,24 @@
                 transition: opacity .25s;
             }
         }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+        }
+
+        /* ---------- One centered column; text stays left-aligned ---------- */
+        .wrap, .nav ul { max-width: 50rem; }
+        section > p, section > dl, .audio-list, .bib, footer p { max-width: none; }
+        figcaption { max-width: none; }
     </style>
 </head>
 
 <body>
-    <div class="wrap">
-        <header>
+    <header class="hero">
+        <div class="wrap">
+            <p class="venue">LAMIR 2026, Belo Horizonte, Brazil</p>
             <h1>PGPG: Covering the Parameter Space of Guitar Playing for Improved Tablature Transcription</h1>
             <ul class="authors">
                 <li>Hegel Pedroza<small>Universidad Autónoma Metropolitana, Lerma</small></li>
@@ -443,8 +582,8 @@
                 <li>Iran R. Román<small>Queen Mary University of London</small></li>
             </ul>
             <ul class="links">
-                <li><a class="primary" href="#" id="paper-link">Paper (PDF)</a></li>
-                <li><a href="https://github.com/hegelespaul/PGPG/" target="_blank">Code</a></li>
+                <li><a class="primary" href="paper.pdf" id="paper-link">Paper (PDF)</a></li>
+                <li><a href="https://github.com/hegelespaul/PGPG/" target="_blank" rel="noopener">Code</a></li>
                 <li><a href="#audio">Audio examples</a></li>
                 <li><a href="#cite">BibTeX</a></li>
             </ul>
@@ -457,8 +596,21 @@
                     <button class="act" id="resample" type="button">Sample another chord</button>
                 </div>
             </div>
-        </header>
+        </div>
+    </header>
 
+    <nav class="nav" aria-label="Sections">
+        <ul>
+            <li><a href="#abstract">Abstract</a></li>
+            <li><a href="#method">Data generation</a></li>
+            <li><a href="#metrics">Metrics</a></li>
+            <li><a href="#results">Results</a></li>
+            <li><a href="#audio">Audio</a></li>
+            <li><a href="#cite">Citation</a></li>
+        </ul>
+    </nav>
+
+    <div class="wrap">
         <main>
             <section id="abstract">
                 <h2>Abstract</h2>
@@ -480,19 +632,26 @@
                     final training set is about 84&nbsp;h of audio. We release the framework, not the generated data.
                 </p>
                 <dl class="fam">
-                    <dt>Monophonic sequences</dt>
-                    <dd>Random (string, fret) notes with random durations, separated by silences.</dd>
-                    <dt>Block polyphony</dt>
-                    <dd>Chords of 2 to 6 notes on distinct strings, played at once. Chord types range from
-                        position-feasible and non-barre to unconstrained.</dd>
-                    <dt>Temporalized polyphony</dt>
-                    <dd>Each chord is played as a block or as an overlapping arpeggio with random order and gaps.</dd>
+                    <div>
+                        <dt>Monophonic sequences</dt>
+                        <dd>Random (string, fret) notes with random durations, separated by silences.</dd>
+                    </div>
+                    <div>
+                        <dt>Block polyphony</dt>
+                        <dd>Chords of 2 to 6 notes on distinct strings, played at once. Chord types range from
+                            position-feasible and non-barre to unconstrained.</dd>
+                    </div>
+                    <div>
+                        <dt>Temporalized polyphony</dt>
+                        <dd>Each chord is played as a block or as an overlapping arpeggio with random order and gaps.
+                        </dd>
+                    </div>
                 </dl>
                 <figure>
-                    <!-- Export data_overview_row.pdf from the paper as PNG into img/ -->
                     <img src="img/algorithm.png"
                         alt="Generation logic and example tablature for the three data families" loading="lazy">
-                    <figcaption>Generation logic and example tablature of the three data families.</figcaption>
+                    <figcaption><b>Figure 1.</b> Generation logic and example tablature of the three data families.
+                    </figcaption>
                 </figure>
             </section>
 
@@ -501,20 +660,27 @@
                 <p>Precision, recall and F<sub>1</sub> treat every wrong label as equally bad. Four complementary
                     metrics add detail:</p>
                 <dl class="fam">
-                    <dt>Fretboard Hamming Distance (FHD)</dt>
-                    <dd>How much of the fretboard is wrong.</dd>
-                    <dt>Fret Error Distance (FED)</dt>
-                    <dd>How far, in frets, a wrong prediction is from the truth.</dd>
-                    <dt>Chord Cardinality Accuracy (CCA)</dt>
-                    <dd>Whether the number of sounding strings is right.</dd>
-                    <dt>Chord Spacing Consistency (CSC)</dt>
-                    <dd>Whether the fret and string spans of the chord are preserved.</dd>
+                    <div>
+                        <dt>Fretboard Hamming Distance (FHD)</dt>
+                        <dd>How much of the fretboard is wrong.</dd>
+                    </div>
+                    <div>
+                        <dt>Fret Error Distance (FED)</dt>
+                        <dd>How far, in frets, a wrong prediction is from the truth.</dd>
+                    </div>
+                    <div>
+                        <dt>Chord Cardinality Accuracy (CCA)</dt>
+                        <dd>Whether the number of sounding strings is right.</dd>
+                    </div>
+                    <div>
+                        <dt>Chord Spacing Consistency (CSC)</dt>
+                        <dd>Whether the fret and string spans of the chord are preserved.</dd>
+                    </div>
                 </dl>
                 <figure>
-                    <!-- Export the single-frame figure (frame_metrics.pdf) as PNG into img/ -->
                     <img src="img/sample.png" alt="Worked example of the four metrics on a single chord frame"
                         loading="lazy" class="sample">
-                    <figcaption>Worked example of the four metrics on a single frame.</figcaption>
+                    <figcaption><b>Figure 2.</b> Worked example of the four metrics on a single frame.</figcaption>
                 </figure>
                 <div class="scroll">
                     <table class="calc">
@@ -566,12 +732,13 @@
                 <h3>Standard metrics</h3>
                 <div class="scroll">
                     <table>
-                        <caption>Multi-pitch and tablature metrics, and Tablature Disambiguation Rate (TDR).</caption>
+                        <caption>Multi-pitch and tablature metrics, and Tablature Disambiguation Rate (TDR). Best
+                            values in bold.</caption>
                         <thead>
                             <tr>
                                 <th rowspan="2">Model</th>
-                                <th colspan="3" style="text-align:center">Multi-pitch</th>
-                                <th colspan="3" style="text-align:center">Tablature</th>
+                                <th colspan="3" class="grp">Multi-pitch</th>
+                                <th colspan="3" class="grp">Tablature</th>
                                 <th rowspan="2">TDR</th>
                             </tr>
                             <tr>
@@ -657,28 +824,29 @@
                         </tbody>
                     </table>
                 </div>
-                <p>PGPG has the lowest fret error and a more stable spacing consistency across chord sizes (2 to 6
-                    notes). Pedroza 2024 is slightly better on FHD, CCA and fret-axis CSC.</p>
+                <p style="margin-top:1.25rem">PGPG has the lowest fret error and a more stable spacing consistency
+                    across chord sizes (2 to 6 notes). Pedroza 2024 is slightly better on FHD, CCA and fret-axis CSC.
+                </p>
 
                 <figure>
-                    <!-- Export MetricPlots.png into img/ -->
                     <img src="img/metrics.png"
                         alt="Per-string and per-chord-size breakdown of FED, FHD, CCA and CSC for the three models"
-                        loading="lazy">
-                    <figcaption>Breakdown of the fine-grained metrics by string and by chord size. Dash-dotted lines and
-                        outlined markers show global means.</figcaption>
+                        loading="lazy" class="sample">
+                    <figcaption><b>Figure 3.</b> Breakdown of the fine-grained metrics by string and by chord size.
+                        Dash-dotted lines and outlined markers show global means.</figcaption>
                 </figure>
             </section>
 
             <section id="audio">
                 <h2>Audio examples</h2>
-                <!-- Put short MP3 clips in audio/ and keep the file names below, or edit them. -->
-                <div class="audio-row"><span>Monophonic sequence</span><audio controls preload="none"
-                        src="audio/single-note.mp3"></audio></div>
-                <div class="audio-row"><span>Block polyphony</span><audio controls preload="none"
-                        src="audio/block.mp3"></audio></div>
-                <div class="audio-row"><span>Temporalized polyphony</span><audio controls preload="none"
-                        src="audio/temporalized.mp3"></audio></div>
+                <div class="audio-list">
+                    <div class="audio-row"><span>Monophonic sequence</span><audio controls preload="none"
+                            src="audio/single-note.mp3"></audio></div>
+                    <div class="audio-row"><span>Block polyphony</span><audio controls preload="none"
+                            src="audio/block.mp3"></audio></div>
+                    <div class="audio-row"><span>Temporalized polyphony</span><audio controls preload="none"
+                            src="audio/temporalized.mp3"></audio></div>
+                </div>
             </section>
 
             <section id="cite">
@@ -739,14 +907,13 @@
 
             function rnd(n) { return Math.floor(Math.random() * n); }
 
-            // Non-barre style sample: 2-4 distinct strings, fret span <= 5, no unisons needed for display
+            // Non-barre style sample: 2-4 distinct strings, fret span <= 5
             function sample() {
                 var n = 2 + rnd(3);
                 var strs = [0, 1, 2, 3, 4, 5].sort(function () { return Math.random() - .5; }).slice(0, n);
                 var base = rnd(8); // lowest fret of the window 0..7
                 var out = {};
-                strs.forEach(function (s) { out[s] = base + rnd(6); }); // base..base+5, span <= 5
-                // keep frets within 0..12
+                strs.forEach(function (s) { out[s] = base + rnd(6); });
                 Object.keys(out).forEach(function (k) { out[k] = Math.min(out[k], FRETS); });
                 return out;
             }
@@ -763,7 +930,7 @@
                     } else if (chord[s] === 0) {
                         var o = document.createElementNS(NS, "circle");
                         o.setAttribute("cx", 38); o.setAttribute("cy", y); o.setAttribute("r", 7);
-                        o.setAttribute("fill", "none"); o.setAttribute("stroke", "currentColor");
+                        o.setAttribute("fill", "none");
                         o.setAttribute("style", "stroke:var(--dot);stroke-width:2.5"); layer.appendChild(o);
                     } else {
                         var cx = X0 + (chord[s] - .5) * fw;
