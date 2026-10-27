@@ -188,12 +188,13 @@
 
         .board {
             --dot: #4cc3b0;
-            width: 100%;
+            width: 90%;
             height: auto;
             display: block;
             background: linear-gradient(#2d1f18, #231712);
             border-radius: 8px;
             box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), 0 18px 40px -18px rgba(0, 0, 0, .7);
+            margin: 0 auto;
         }
 
         .board .fret {
@@ -546,6 +547,10 @@
             margin: 0;
         }
 
+        .algorithm{
+            width: 80%;
+        }
+
         @media (min-width: 48rem) {
             .audio-row {
                 grid-template-columns: 14rem 1fr;
@@ -650,7 +655,7 @@
                 </dl>
                 <figure>
                     <img src="img/algorithm.png"
-                        alt="Generation logic and example tablature for the three data families" loading="lazy">
+                        alt="Generation logic and example tablature for the three data families" loading="lazy" class="algorithm">
                     <figcaption><b>Figure 1.</b> Generation logic and example tablature of the three data families.
                     </figcaption>
                 </figure>
@@ -832,7 +837,7 @@
                 <figure>
                     <img src="img/metrics.png"
                         alt="Per-string and per-chord-size breakdown of FED, FHD, CCA and CSC for the three models"
-                        loading="lazy" class="sample">
+                        loading="lazy" class="algorithm">
                     <figcaption><b>Figure 3.</b> Breakdown of the fine-grained metrics by string and by chord size.
                         Dash-dotted lines and outlined markers show global means.</figcaption>
                 </figure>
